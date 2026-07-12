@@ -25,14 +25,14 @@ function SVGCalendar({
   const boxes: React.ReactNode[] = [];
   const headings: React.ReactNode[] = [];
   const firstOfMonth = dfn.startOfMonth(date);
-  const fomWeekday = dfn.getISODay(firstOfMonth);
+  const fomWeekday = dfn.getDay(firstOfMonth);
   const monthLength = dfn.getDaysInMonth(firstOfMonth);
   for (let i = 0; i < 7 * 5; i++) {
     const y = Math.floor(i / 7);
     const x = i % 7;
     const tx = x * (boxWidth + boxMargin);
     const ty = y * (boxHeight + boxMargin);
-    const dayOfMonth = i + 2 - fomWeekday;
+    const dayOfMonth = i + 1 - fomWeekday;
     const date = dfn.setDate(firstOfMonth, dayOfMonth);
     if (y === 0) {
       headings.push(
