@@ -10,6 +10,7 @@ function SVGCalendar({
   textYAdj = 0,
   fontSize = 12,
   boxStrokeWidth = 1,
+  shortDayNames = false,
 }: {
   date: Date;
   boxMargin?: number;
@@ -19,12 +20,14 @@ function SVGCalendar({
   textYAdj?: number;
   fontSize?: number;
   boxStrokeWidth?: number;
+  shortDayNames?: boolean;
 }) {
   const textXOff = boxWidth / 2 + textXAdj;
   const textYOff = boxHeight / 2 + textYAdj;
   const boxes: React.ReactNode[] = [];
   const headings: React.ReactNode[] = [];
-  const firstOfMonth = dfn.startOfMonth(date);
+  const safeDate = !date || isNaN(date.getTime()) ? new Date() : date;
+  const firstOfMonth = dfn.startOfMonth(safeDate);
   const fomWeekday = dfn.getDay(firstOfMonth);
   const monthLength = dfn.getDaysInMonth(firstOfMonth);
   for (let i = 0; i < 7 * 5; i++) {
@@ -35,10 +38,12 @@ function SVGCalendar({
     const dayOfMonth = i + 1 - fomWeekday;
     const date = dfn.setDate(firstOfMonth, dayOfMonth);
     if (y === 0) {
+      const dayName = dfn.format(date, "cccccc");
+      const formattedDayName = shortDayNames ? dayName.charAt(0) : dayName;
       headings.push(
         <g transform={`translate(${tx} ${-boxMargin * 2})`} key={i}>
           <text x={textXOff} textAnchor="middle" fontSize={fontSize}>
-            {dfn.format(date, "cccccc")}
+            {formattedDayName}
           </text>
         </g>
       );
