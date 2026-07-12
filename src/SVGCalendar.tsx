@@ -11,6 +11,7 @@ function SVGCalendar({
   fontSize = 12,
   boxStrokeWidth = 1,
   shortDayNames = false,
+  fontFamily = "Outfit",
 }: {
   date: Date;
   boxMargin?: number;
@@ -21,6 +22,7 @@ function SVGCalendar({
   fontSize?: number;
   boxStrokeWidth?: number;
   shortDayNames?: boolean;
+  fontFamily?: string;
 }) {
   const textXOff = boxWidth / 2 + textXAdj;
   const textYOff = boxHeight / 2 + textYAdj;
@@ -55,7 +57,7 @@ function SVGCalendar({
             width={boxWidth}
             height={boxHeight}
             fill="none"
-            stroke="black"
+            stroke={boxStrokeWidth === 0 ? "none" : "black"}
             strokeWidth={boxStrokeWidth}
           />
           <text
@@ -71,8 +73,36 @@ function SVGCalendar({
       );
     }
   }
+
+  const googleFontsMap: Record<string, string> = {
+    "Outfit": "Outfit:wght@400;700",
+    "Inter": "Inter:wght@400;700",
+    "Playfair Display": "Playfair+Display:wght@400;700",
+    "Roboto Mono": "Roboto+Mono:wght@400;700",
+    "Montserrat": "Montserrat:wght@400;700",
+    "Merriweather": "Merriweather:wght@400;700",
+    "Pacifico": "Pacifico",
+    "Lobster": "Lobster",
+    "Cinzel": "Cinzel:wght@400;700",
+    "Oswald": "Oswald:wght@400;700",
+    "Great Vibes": "Great+Vibes",
+    "Special Elite": "Special+Elite",
+  };
+
+  const googleFontName = googleFontsMap[fontFamily];
+  const importStyle = googleFontName ? (
+    <style>
+      {`@import url('https://fonts.googleapis.com/css2?family=${googleFontName}&display=swap');`}
+    </style>
+  ) : null;
+
+  const resolvedFontFamily = fontFamily.includes(",") ? fontFamily : `'${fontFamily}', sans-serif`;
+
   return (
-    <svg viewBox="0 0 297 210">
+    <svg viewBox="0 0 297 210" style={{ fontFamily: resolvedFontFamily }}>
+      <defs>
+        {importStyle}
+      </defs>
       <g transform="translate(20 30)">
         {headings}
         {boxes}
